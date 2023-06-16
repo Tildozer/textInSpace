@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
 import { loadFont } from "./fontLoader";
+import { loadObjects } from "./objects";
 
 /**
  * Base
@@ -15,29 +16,29 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
-const axisHelper = new THREE.AxesHelper();
-
-scene.add(axisHelper);
-
 /**
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
 const matcapTextures = {
-    clay : textureLoader.load('/textures/matcaps/1.png'),
-    marble : textureLoader.load('/textures/matcaps/2.png'),
-    steel : textureLoader.load('/textures/matcaps/3.png'),
-}; 
+  clay: textureLoader.load("/textures/matcaps/1.png"),
+  steel: textureLoader.load("/textures/matcaps/3.png"),
+  greenCartoon: textureLoader.load("/textures/matcaps/7.png"),
+  iridescent: textureLoader.load("/textures/matcaps/8.png"),
+  stained: textureLoader.load("/textures/matcaps/stained.png"),
+};
 
 /**
  * Fonts
  */
 
-loadFont({gui, scene});
+loadFont({ gui, scene, matcapTextures });
 
 /**
  * Object
  */
+
+loadObjects({ gui, scene, matcapTextures });
 
 /**
  * Sizes
@@ -73,7 +74,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.x = 1;
 camera.position.y = 1;
-camera.position.z = 2;
+camera.position.z = 4;
 scene.add(camera);
 
 // Controls
