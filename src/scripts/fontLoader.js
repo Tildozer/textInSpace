@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 
-export const loadFont = async ({ gui, scene, matcapTextures }) => {
+export const loadFont = async ({ scene, matcapTextures, findFontSize }) => {
   const fontLoader = new FontLoader();
 
   const font = await new Promise((resolve, reject) => {
@@ -14,17 +14,7 @@ export const loadFont = async ({ gui, scene, matcapTextures }) => {
     );
   });
   console.log("fontLoaded");
-  let fontSize
-  let width = window.innerWidth;
-  if(width < 553) {
-    fontSize = 0.2;
-  } else if( width < 600) {
-    fontSize = 0.3;
-  } else if(width < 950) {
-    fontSize = 0.4;
-  } else {
-    fontSize = 0.5;
-  }
+  let fontSize = findFontSize();
   const textGeometry = new TextGeometry(
     "Embrace the journey,\nnot just the destination.",
     {
@@ -46,9 +36,7 @@ export const loadFont = async ({ gui, scene, matcapTextures }) => {
   });
   const text = new THREE.Mesh(textGeometry, textMaterial);
 
-  gui.add(text.position, "x").name("text Position").min(-10).max(10).step(0.01);
-
   scene.add(text);
 
-  return text;
+  return {text, textGeometry};
 };

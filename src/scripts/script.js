@@ -1,43 +1,39 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import * as dat from "lil-gui";
 import { loadFont } from "./fontLoader";
 import { loadObjects } from "./objects";
+import { loadTextures } from "./textures";
 
 /**
  * Base
  */
-// Debug
-const gui = new dat.GUI();
-
-// Canvas
 const canvas = document.querySelector("canvas.webgl");
-
-// Scene
 const scene = new THREE.Scene();
-
 /**
  * Textures
  */
-const textureLoader = new THREE.TextureLoader();
-const matcapTextures = {
-  greenCartoon: textureLoader.load("/textures/matcaps/7.png"),
-  shinyYellow: textureLoader.load("/textures/matcaps/10.png"),
-  foamGreen: textureLoader.load("/textures/matcaps/11.png"),
-};
-
+ const matcapTextures = loadTextures();
 /**
  * Fonts
  */
+const findFontSize = () => {
+  let width = window.innerWidth;
+  if(width < 553) {
+    return 0.2;
+  } else if( width < 788) {
+    return 0.3;
+  } else if(width < 950) {
+    return 0.4;
+  } else {
+    return 0.5;
+  }
+};
 
-const text = await loadFont({ gui, scene, matcapTextures });
-
+let textObj = await loadFont({ scene, matcapTextures, findFontSize,});
 /**
  * Object
  */
-
 loadObjects({ scene, matcapTextures });
-
 /**
  * Sizes
  */
@@ -46,7 +42,7 @@ const sizes = {
   height: window.innerHeight,
 };
 
-window.addEventListener("resize", () => {
+window.addEventListener("resize", async () => {
   // Update sizes
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
@@ -54,7 +50,13 @@ window.addEventListener("resize", () => {
   // Update camera
   camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
-
+  // Update Font
+  let fontSize = findFontSize();
+  if(fontSize !== textObj.textGeometry.parameters.options.size){
+    textObj.textGeometry.dispose();
+    scene.remove(textObj.text);
+    textObj = await loadFont({ scene, matcapTextures, findFontSize, });
+  }
   // Update renderer
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -106,18 +108,19 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
  */
 const clock = new THREE.Clock();
 
-// window.addEventListener("mouseover", () => {
-  
+// window.addEventListener("mousemove", (ev) => {
+//   console.log(ev.clientY);
+//   textObj.text.rotation.x = ev.clientY * 0.0005;
 // });
-console.log(text)
+
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
   const amplitude = 0.5;
 
   // Update controls
   controls.update();
-  text.position.y = Math.sin(elapsedTime * 0.5) * amplitude;
-  text.rotation.y = elapsedTime * 0.10;
+  textObj.text.position.y = Math.sin(elapsedTime * 0.5) * amplitude;
+  textObj.text.rotation.y = elapsedTime * 0.10;
 
 
   // Calculate camera position
@@ -128,8 +131,7 @@ const tick = () => {
   camera.position.set(cameraX, 0, cameraZ);
 
   // Set camera target
-  camera.lookAt(text.position);
-
+  camera.lookAt(textObj.text.position);
 
   // Render
   renderer.render(scene, camera);
