@@ -21,11 +21,9 @@ const scene = new THREE.Scene();
  */
 const textureLoader = new THREE.TextureLoader();
 const matcapTextures = {
-  clay: textureLoader.load("/textures/matcaps/1.png"),
-  steel: textureLoader.load("/textures/matcaps/3.png"),
   greenCartoon: textureLoader.load("/textures/matcaps/7.png"),
-  iridescent: textureLoader.load("/textures/matcaps/8.png"),
-  stained: textureLoader.load("/textures/matcaps/stained.png"),
+  shinyYellow: textureLoader.load("/textures/matcaps/10.png"),
+  foamGreen: textureLoader.load("/textures/matcaps/11.png"),
 };
 
 /**
@@ -38,7 +36,7 @@ const text = await loadFont({ gui, scene, matcapTextures });
  * Object
  */
 
-loadObjects({ gui, scene, matcapTextures });
+loadObjects({ scene, matcapTextures });
 
 /**
  * Sizes
@@ -52,7 +50,7 @@ window.addEventListener("resize", () => {
   // Update sizes
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
-
+  console.log(sizes.width);
   // Update camera
   camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
@@ -77,6 +75,19 @@ camera.position.y = 1;
 camera.position.z = 4;
 scene.add(camera);
 
+/**
+ * Lights
+ */
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+
+const pointLight = new THREE.PointLight(0xffffff, 0.5);
+pointLight.position.x = 2;
+pointLight.position.y = 3;
+pointLight.position.z = 4;
+
+scene.add(ambientLight, pointLight)
+
+
 // Controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
@@ -95,14 +106,30 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
  */
 const clock = new THREE.Clock();
 
+// window.addEventListener("mouseover", () => {
+  
+// });
+console.log(text)
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
   const amplitude = 0.5;
 
   // Update controls
   controls.update();
-  console.log(text)
-  text.position.y = Math.sin((elapsedTime * 0.25)) * amplitude;
+  text.position.y = Math.sin(elapsedTime * 0.5) * amplitude;
+  text.rotation.y = elapsedTime * 0.10;
+
+
+  // Calculate camera position
+  const distance = 5; // Adjust the distance between the camera and the text
+  const cameraAngle = elapsedTime * 0.1; // Adjust the camera rotation speed
+  const cameraX = Math.sin(cameraAngle) * distance;
+  const cameraZ = Math.cos(cameraAngle) * distance;
+  camera.position.set(cameraX, 0, cameraZ);
+
+  // Set camera target
+  camera.lookAt(text.position);
+
 
   // Render
   renderer.render(scene, camera);

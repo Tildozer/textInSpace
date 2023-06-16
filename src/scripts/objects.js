@@ -1,8 +1,10 @@
 import * as THREE from "three";
 
-const makeDonuts = ({ gui, scene, matcapTextures }) => {
+const makeDonuts = ({ scene, matcapTextures }) => {
   const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45);
-   const donutMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTextures.iridescent});
+  const donutMaterial = new THREE.MeshMatcapMaterial({
+    matcap: matcapTextures.shinyYellow,
+  });
   makeMultipleItems({
     geometry: donutGeometry,
     material: donutMaterial,
@@ -10,6 +12,9 @@ const makeDonuts = ({ gui, scene, matcapTextures }) => {
     amount: 50,
   });
 };
+const makeCones = ({ scene }) => {
+
+}
 
 const makeMultipleItems = ({ geometry, material, scene, amount }) => {
   for (let i = 0; i < amount; i++) {
@@ -28,6 +33,6 @@ const makeMultipleItems = ({ geometry, material, scene, amount }) => {
   }
 };
 
-export const loadObjects = ({ gui, scene, matcapTextures }) => {
-  makeDonuts({ gui, scene, matcapTextures });
+export const loadObjects = ({ scene, matcapTextures }) => {
+  makeDonuts({ scene, matcapTextures });
 };
