@@ -32,7 +32,7 @@ const matcapTextures = {
  * Fonts
  */
 
-loadFont({ gui, scene, matcapTextures });
+const text = await loadFont({ gui, scene, matcapTextures });
 
 /**
  * Object
@@ -97,9 +97,12 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+  const amplitude = 0.5;
 
   // Update controls
   controls.update();
+  console.log(text)
+  text.position.y = Math.sin((elapsedTime * 0.25)) * amplitude;
 
   // Render
   renderer.render(scene, camera);
