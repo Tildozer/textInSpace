@@ -1,19 +1,40 @@
-*
-{
-    margin: 0;
-    padding: 0;
-}
-
 html,
-body
-{
-    overflow: hidden;
+body {
+  margin: 0;
+  overflow: hidden;
 }
 
-.webgl
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
+.webgl {
+  top: 0;
+  left: 0;
+  outline: none;
+  position: fixed;
+}
+a {
+  color: #f0f8ff;
+  text-decoration: none;
+}
+a:visited {
+  color: #aa336a;
+}
+a:hover {
+  text-decoration: underline;
+}
+.portfolio {
+  top: 0.5rem;
+  right: 2rem;
+  color: black;
+}
+.three {
+  top: 2.5rem;
+  right: 2rem;
+}
+.link {
+  position: fixed;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: white;
+}
+.link:hover {
+  right: 2.5rem;
 }
