@@ -1,11 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-// import cascadiaCode from "/fonts/Cascadia Code_Regular.json"
-
-// console.log(cascadiaCode);
+import { loadFont } from "./fontLoader";
 
 /**
  * Base
@@ -19,36 +15,25 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
+const axisHelper = new THREE.AxesHelper();
+
+scene.add(axisHelper);
+
 /**
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
+const matcapTextures = {
+    clay : textureLoader.load('/textures/matcaps/1.png'),
+    marble : textureLoader.load('/textures/matcaps/2.png'),
+    steel : textureLoader.load('/textures/matcaps/3.png'),
+}; 
 
 /**
  * Fonts
  */
 
-const fontLoader = new FontLoader();
-fontLoader.load("/fonts/Cascadia Code_Regular.json", (font) => {
-  console.log("fontLoaded");
-  const textGeometry = new TextGeometry(
-    "Anthony Thibodeaux, \nThis is a test.",
-    {
-      font,
-      size: 0.5,
-      height: 0.25,
-      curveSegments: 12,
-      bevelEnabled: true,
-      bevelThickness: 0.03,
-      bevelSize: 0.02,
-      bevelOffset: 0,
-      bevelSegments: 5,
-    }
-  );
-  const textMaterial = new THREE.MeshBasicMaterial({ wireframe: true });
-  const text = new THREE.Mesh(textGeometry, textMaterial);
-  scene.add(text);
-});
+loadFont({gui, scene});
 
 /**
  * Object
