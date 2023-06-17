@@ -75,8 +75,6 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
  */
 const gui = new GUI();
 
-const axisHelper = new THREE.AxesHelper(5);
-
 gui.add(textObj.text.rotation, "x").min(0).max(7).step(0.01);
 gui.add(textObj.text.rotation, "y").min(0).max(7).step(0.01);
 gui.add(textObj.text.rotation, "z").min(0).max(7).step(0.01);
@@ -88,7 +86,7 @@ gui.hide();
  */
 const clock = new THREE.Clock();
 
-scene.add(ambientLight, pointLight, camera, axisHelper);
+scene.add(ambientLight, pointLight, camera);
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
   const amplitude = 0.5;
